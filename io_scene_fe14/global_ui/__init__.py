@@ -17,6 +17,11 @@ from bpy.types import (
     Panel
     )  
 
+from .object_ui import (
+    FE14_ObjectPropertiesGroup,
+    FE14_ObjectProps
+)
+
 def string_empty_check(string):
     is_empty = False
     
@@ -40,20 +45,26 @@ class FE14_SceneProps(Panel):
         vanilla_romfs_path = bpy.context.preferences.addons["io_scene_fe14"].preferences.vanilla_romfs_path
         modded_romfs_path = bpy.context.preferences.addons["io_scene_fe14"].preferences.modded_romfs_path
         
-        if (string_empty_check(vanilla_romfs_path) or not os.path.exists(vanilla_romfs_path)) or (string_empty_check(modded_romfs_path) or not os.path.exists(modded_romfs_path)):
-            layout.enabled = False
+        #if (string_empty_check(vanilla_romfs_path) or not os.path.exists(vanilla_romfs_path)) or (string_empty_check(modded_romfs_path) or not os.path.exists(modded_romfs_path)):
+        #    layout.enabled = False
 
 classes = [
-    FE14_SceneProps
+    FE14_SceneProps,
+    FE14_ObjectPropertiesGroup,
+    FE14_ObjectProps
 ]
 
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+        
+    bpy.types.Object.fe14_props = PointerProperty(type=FE14_ObjectPropertiesGroup, name="FE14 Properties", description="Set properties for your object")
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+        
+    del bpy.types.Object.fe14_props
 
 if __name__ == '__main__':
     register()
